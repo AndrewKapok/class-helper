@@ -1,0 +1,13 @@
+release/main.o
+release/mainwindow.o
+release/importdialog.o
+release/seatingconfigdialog.o
+release/algorithmconfigdialog.o
+release/resultviewer.o
+release/exportdialog.o
+release/moc_mainwindow.o
+release/moc_importdialog.o
+release/moc_seatingconfigdialog.o
+release/moc_algorithmconfigdialog.o
+release/moc_resultviewer.o
+release/moc_exportdialog.o
