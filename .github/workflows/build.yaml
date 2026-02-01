@@ -1,0 +1,33 @@
+name: Build Qt Application (32-bit and 64-bit)
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # 允许手动触发工作流
+
+# 定义环境变量，方便后续使用
+env:
+  QT_VERSION: "6.5.0"  # 使用的 Qt 版本
+  BUILD_TYPE: "Release" # 构建类型（Release 或 Debug）
+  APP_NAME: "StudentScoreApp" # 应用程序名称
+
+jobs:
+  build-64bit:
+    name: Build 64-bit Application
+    runs-on: windows-latest  # 使用 Windows 环境进行构建
+
+    steps:
+    # 步骤 1: 检出代码
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: build data.dll
+    # 步骤 8: 上传构建产物
+    - name: Upload artifacts (64-bit)
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ env.APP_NAME }}-Windows-64bit  # 制品名称
+        path: artifacts/64-bit/                  # 制品路径
