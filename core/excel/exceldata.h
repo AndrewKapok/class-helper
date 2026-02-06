@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+using namespace std;
 
 /**
  * Excel数据存储类
@@ -18,8 +19,8 @@ private:
      */
     struct Cell
     {
-        std::string value; ///< 单元格值
-        Cell(const std::string &v) : value(v) {}
+        wstring value; ///< 单元格值
+        Cell(const wstring &v) : value(v) {}
     };
 
     /**
@@ -28,13 +29,13 @@ private:
      */
     struct Row
     {
-        std::vector<Cell> cells; ///< 行中的单元格
+        vector<Cell> cells; ///< 行中的单元格
 
         /**
          * 添加单元格到行
          * @param value 单元格值
          */
-        void addCell(const std::string &value)
+        void addCell(const wstring &value)
         {
             cells.emplace_back(value);
         }
@@ -53,9 +54,9 @@ private:
          * @param index 单元格索引
          * @return 单元格值
          */
-        const std::string &getCellValue(size_t index) const
+        const wstring &getCellValue(size_t index) const
         {
-            static std::string empty;
+            static wstring empty;
             if (index < cells.size())
             {
                 return cells[index].value;
@@ -70,14 +71,14 @@ private:
      */
     struct Sheet
     {
-        std::string name;      ///< 工作表名称
-        std::vector<Row> rows; ///< 工作表中的行
+        wstring name;     ///< 工作表名称
+        vector<Row> rows; ///< 工作表中的行
 
         /**
          * 构造函数
          * @param n 工作表名称
          */
-        Sheet(const std::string &n) : name(n) {}
+        Sheet(const wstring &n) : name(n) {}
 
         /**
          * 添加行到工作表
@@ -92,7 +93,7 @@ private:
          * @param rowIndex 行索引
          * @param value 单元格值
          */
-        void addCellToRow(size_t rowIndex, const std::string &value)
+        void addCellToRow(size_t rowIndex, const wstring &value)
         {
             if (rowIndex < rows.size())
             {
@@ -125,7 +126,7 @@ private:
         }
     };
 
-    std::map<std::string, Sheet> sheets; ///< 存储所有工作表
+    map<wstring, Sheet> sheets; ///< 存储所有工作表
 
 public:
     /**
@@ -139,7 +140,7 @@ public:
      * 添加工作表
      * @param sheetName 工作表名称
      */
-    void addSheet(const std::string &sheetName)
+    void addSheet(const wstring &sheetName)
     {
         if (sheets.find(sheetName) == sheets.end())
         {
@@ -152,7 +153,7 @@ public:
      * @param sheetName 工作表名称
      * @return 是否存在
      */
-    bool hasSheet(const std::string &sheetName) const
+    bool hasSheet(const wstring &sheetName) const
     {
         return sheets.find(sheetName) != sheets.end();
     }
@@ -170,9 +171,9 @@ public:
      * 获取所有工作表名称
      * @return 工作表名称列表
      */
-    std::vector<std::string> getSheetNames() const
+    vector<wstring> getSheetNames() const
     {
-        std::vector<std::string> names;
+        vector<wstring> names;
         for (const auto &pair : sheets)
         {
             names.push_back(pair.first);
@@ -186,7 +187,7 @@ public:
      * 向指定工作表添加行
      * @param sheetName 工作表名称
      */
-    void addRowToSheet(const std::string &sheetName)
+    void addRowToSheet(const wstring &sheetName)
     {
         auto it = sheets.find(sheetName);
         if (it != sheets.end())
@@ -200,7 +201,7 @@ public:
      * @param sheetName 工作表名称
      * @return 行数
      */
-    size_t getRowCountInSheet(const std::string &sheetName) const
+    size_t getRowCountInSheet(const wstring &sheetName) const
     {
         auto it = sheets.find(sheetName);
         if (it != sheets.end())
@@ -218,7 +219,7 @@ public:
      * @param rowIndex 行索引
      * @param value 单元格值
      */
-    void addCellToSheetRow(const std::string &sheetName, size_t rowIndex, const std::string &value)
+    void addCellToSheetRow(const wstring &sheetName, size_t rowIndex, const wstring &value)
     {
         auto it = sheets.find(sheetName);
         if (it != sheets.end())
@@ -234,9 +235,9 @@ public:
      * @param colIndex 列索引
      * @return 单元格值
      */
-    const std::string &getCellValue(const std::string &sheetName, size_t rowIndex, size_t colIndex) const
+    const wstring &getCellValue(const wstring &sheetName, size_t rowIndex, size_t colIndex) const
     {
-        static std::string empty;
+        static wstring empty;
         auto it = sheets.find(sheetName);
         if (it != sheets.end())
         {
@@ -251,7 +252,7 @@ public:
      * @param sheetName 工作表名称
      * @return 最大列数
      */
-    size_t getMaxColumnCount(const std::string &sheetName) const
+    size_t getMaxColumnCount(const wstring &sheetName) const
     {
         auto it = sheets.find(sheetName);
         if (it != sheets.end())

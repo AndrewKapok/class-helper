@@ -2,13 +2,14 @@
 #include <fstream>
 #include <vector>
 #include <cstdint>
+using namespace std;
 
 /**
  * 写入文件头
  * @param file 文件流
  * @return 是否写入成功
  */
-bool ExcelWrite::writeFileHeader(std::ofstream &file)
+bool ExcelWrite::writeFileHeader(wofstream &file)
 {
     // 写入BIFF文件头
     uint16_t signature = 0x424D; // 'BM'
@@ -17,14 +18,14 @@ bool ExcelWrite::writeFileHeader(std::ofstream &file)
     uint16_t reserved2 = 0;
     uint32_t dataOffset = 512; // 标准偏移量
 
-    file.write((char *)&signature, sizeof(signature));
-    file.write((char *)&fileSize, sizeof(fileSize));
-    file.write((char *)&reserved1, sizeof(reserved1));
-    file.write((char *)&reserved2, sizeof(reserved2));
-    file.write((char *)&dataOffset, sizeof(dataOffset));
+    file.write(reinterpret_cast<const wchar_t*>(&signature), sizeof(signature));
+    file.write(reinterpret_cast<const wchar_t*>(&fileSize), sizeof(fileSize));
+    file.write(reinterpret_cast<const wchar_t*>(&reserved1), sizeof(reserved1));
+    file.write(reinterpret_cast<const wchar_t*>(&reserved2), sizeof(reserved2));
+    file.write(reinterpret_cast<const wchar_t*>(&dataOffset), sizeof(dataOffset));
 
     // 写入DIF头（总共512字节）
-    std::vector<char> difHeader(512 - 14, 0);
+    vector<wchar_t> difHeader(512 - 14, 0);
     file.write(difHeader.data(), difHeader.size());
 
     return true;
@@ -36,7 +37,7 @@ bool ExcelWrite::writeFileHeader(std::ofstream &file)
  * @param data 数据存储对象
  * @return 是否写入成功
  */
-bool ExcelWrite::writeRecords(std::ofstream &file, const ExcelData &data)
+bool ExcelWrite::writeRecords(wofstream &file, const ExcelData &data)
 {
     // 写入BOF记录
     uint16_t bofRecord = 0x0009;
@@ -46,12 +47,12 @@ bool ExcelWrite::writeRecords(std::ofstream &file, const ExcelData &data)
     uint16_t bofBuild = 0x0000;
     uint16_t bofYear = 0x0000;
 
-    file.write((char *)&bofRecord, sizeof(bofRecord));
-    file.write((char *)&bofLength, sizeof(bofLength));
-    file.write((char *)&bofVersion, sizeof(bofVersion));
-    file.write((char *)&bofType, sizeof(bofType));
-    file.write((char *)&bofBuild, sizeof(bofBuild));
-    file.write((char *)&bofYear, sizeof(bofYear));
+    file.write(reinterpret_cast<const wchar_t*>(&bofRecord), sizeof(bofRecord));
+    file.write(reinterpret_cast<const wchar_t*>(&bofLength), sizeof(bofLength));
+    file.write(reinterpret_cast<const wchar_t*>(&bofVersion), sizeof(bofVersion));
+    file.write(reinterpret_cast<const wchar_t*>(&bofType), sizeof(bofType));
+    file.write(reinterpret_cast<const wchar_t*>(&bofBuild), sizeof(bofBuild));
+    file.write(reinterpret_cast<const wchar_t*>(&bofYear), sizeof(bofYear));
 
     // 写入工作表记录
     auto sheetNames = data.getSheetNames();
@@ -63,8 +64,8 @@ bool ExcelWrite::writeRecords(std::ofstream &file, const ExcelData &data)
     // 写入EOF记录
     uint16_t eofRecord = 0x000A;
     uint16_t eofLength = 0x0000;
-    file.write((char *)&eofRecord, sizeof(eofRecord));
-    file.write((char *)&eofLength, sizeof(eofLength));
+    file.write(reinterpret_cast<const wchar_t*>(&eofRecord), sizeof(eofRecord));
+    file.write(reinterpret_cast<const wchar_t*>(&eofLength), sizeof(eofLength));
 
     return true;
 }
@@ -76,7 +77,7 @@ bool ExcelWrite::writeRecords(std::ofstream &file, const ExcelData &data)
  * @param data 数据存储对象
  * @return 是否写入成功
  */
-bool ExcelWrite::writeSheet(std::ofstream &file, const std::string &sheetName, const ExcelData &data)
+bool ExcelWrite::writeSheet(wofstream &file, const wstring &sheetName, const ExcelData &data)
 {
     // 写入工作表的BOF记录
     uint16_t bofRecord = 0x0009;
@@ -86,12 +87,12 @@ bool ExcelWrite::writeSheet(std::ofstream &file, const std::string &sheetName, c
     uint16_t bofBuild = 0x0000;
     uint16_t bofYear = 0x0000;
 
-    file.write((char *)&bofRecord, sizeof(bofRecord));
-    file.write((char *)&bofLength, sizeof(bofLength));
-    file.write((char *)&bofVersion, sizeof(bofVersion));
-    file.write((char *)&bofType, sizeof(bofType));
-    file.write((char *)&bofBuild, sizeof(bofBuild));
-    file.write((char *)&bofYear, sizeof(bofYear));
+    file.write(reinterpret_cast<const wchar_t*>(&bofRecord), sizeof(bofRecord));
+    file.write(reinterpret_cast<const wchar_t*>(&bofLength), sizeof(bofLength));
+    file.write(reinterpret_cast<const wchar_t*>(&bofVersion), sizeof(bofVersion));
+    file.write(reinterpret_cast<const wchar_t*>(&bofType), sizeof(bofType));
+    file.write(reinterpret_cast<const wchar_t*>(&bofBuild), sizeof(bofBuild));
+    file.write(reinterpret_cast<const wchar_t*>(&bofYear), sizeof(bofYear));
 
     // 写入单元格
     size_t rowCount = data.getRowCountInSheet(sheetName);
@@ -100,7 +101,7 @@ bool ExcelWrite::writeSheet(std::ofstream &file, const std::string &sheetName, c
         size_t colCount = data.getMaxColumnCount(sheetName);
         for (size_t col = 0; col < colCount; col++)
         {
-            const std::string &value = data.getCellValue(sheetName, row, col);
+            const wstring &value = data.getCellValue(sheetName, row, col);
             if (!value.empty())
             {
                 writeCell(file, row, col, value);
@@ -111,8 +112,8 @@ bool ExcelWrite::writeSheet(std::ofstream &file, const std::string &sheetName, c
     // 写入工作表的EOF记录
     uint16_t eofRecord = 0x000A;
     uint16_t eofLength = 0x0000;
-    file.write((char *)&eofRecord, sizeof(eofRecord));
-    file.write((char *)&eofLength, sizeof(eofLength));
+    file.write(reinterpret_cast<const wchar_t*>(&eofRecord), sizeof(eofRecord));
+    file.write(reinterpret_cast<const wchar_t*>(&eofLength), sizeof(eofLength));
 
     return true;
 }
@@ -125,7 +126,7 @@ bool ExcelWrite::writeSheet(std::ofstream &file, const std::string &sheetName, c
  * @param value 单元格值
  * @return 是否写入成功
  */
-bool ExcelWrite::writeCell(std::ofstream &file, size_t row, size_t col, const std::string &value)
+bool ExcelWrite::writeCell(wofstream &file, size_t row, size_t col, const wstring &value)
 {
     // 这是一个简化的实现
     // 在实际实现中，我们会正确写入单元格数据
@@ -138,13 +139,13 @@ bool ExcelWrite::writeCell(std::ofstream &file, size_t row, size_t col, const st
  * @param data 数据存储对象
  * @return 是否写入成功
  */
-bool ExcelWrite::write(const std::string &filePath, const ExcelData &data)
+bool ExcelWrite::write(const wstring &filePath, const ExcelData &data)
 {
     // 打开文件
-    std::ofstream file(filePath, std::ios::binary);
+    wofstream file(filePath.c_str());
     if (!file)
     {
-        lastError = "无法打开文件进行写入: " + filePath;
+        lastError = L"无法打开文件进行写入: " + filePath;
         return false;
     }
 

@@ -2,18 +2,19 @@
 #include <fstream>
 #include <vector>
 #include <cstdint>
+using namespace std;
 
 /**
  * 解析文件头
- * @param buffer 文件缓冲区
+ * @param buffer 文件缓冲区（宽字符）
  * @param size 缓冲区大小
  * @return 是否解析成功
  */
-bool ExcelRead::parseFileHeader(const char *buffer, size_t size)
+bool ExcelRead::parseFileHeader(const wchar_t *buffer, size_t size)
 {
     if (size < 8)
     {
-        lastError = "文件太小，不是有效的Excel文件";
+        lastError = L"文件太小,不是有效的Excel文件";
         return false;
     }
 
@@ -21,7 +22,7 @@ bool ExcelRead::parseFileHeader(const char *buffer, size_t size)
     uint16_t signature = *(uint16_t *)buffer;
     if (signature != 0x424D)
     { // 'BM' 表示BIFF格式
-        lastError = "无效的Excel文件签名";
+        lastError = L"无效的Excel文件签名";
         return false;
     }
 
@@ -30,15 +31,15 @@ bool ExcelRead::parseFileHeader(const char *buffer, size_t size)
 
 /**
  * 解析记录
- * @param buffer 文件缓冲区
+ * @param buffer 文件缓冲区（宽字符）
  * @param size 缓冲区大小
  * @param data 数据存储对象
  * @return 是否解析成功
  */
-bool ExcelRead::parseRecords(const char *buffer, size_t size, ExcelData &data)
+bool ExcelRead::parseRecords(const wchar_t *buffer, size_t size, ExcelData &data)
 {
     size_t offset = 8; // 跳过文件头
-    std::string currentSheet = "Sheet1";
+    wstring currentSheet = L"Sheet1";
     data.addSheet(currentSheet);
 
     while (offset < size)
@@ -66,7 +67,7 @@ bool ExcelRead::parseRecords(const char *buffer, size_t size, ExcelData &data)
                 uint32_t sheetOffset = *(uint32_t *)(buffer + offset + 6);
                 // 工作表名称以Unicode字符串形式存储
                 // 这是一个简化的实现
-                currentSheet = "Sheet" + std::to_string(data.getSheetCount() + 1);
+                currentSheet = L"Sheet" + to_wstring(data.getSheetCount() + 1);
                 data.addSheet(currentSheet);
             }
             break;
@@ -87,14 +88,14 @@ bool ExcelRead::parseRecords(const char *buffer, size_t size, ExcelData &data)
 
 /**
  * 解析工作表
- * @param buffer 文件缓冲区
+ * @param buffer 文件缓冲区（宽字符）
  * @param size 缓冲区大小
  * @param offset 偏移量
  * @param sheetName 工作表名称
  * @param data 数据存储对象
  * @return 是否解析成功
  */
-bool ExcelRead::parseSheet(const char *buffer, size_t size, size_t offset, const std::string &sheetName, ExcelData &data)
+bool ExcelRead::parseSheet(const wchar_t *buffer, size_t size, size_t offset, const wstring &sheetName, ExcelData &data)
 {
     // 这是一个简化的实现
     // 在实际实现中，我们会在这里解析工作表结构
@@ -103,7 +104,7 @@ bool ExcelRead::parseSheet(const char *buffer, size_t size, size_t offset, const
 
 /**
  * 解析单元格
- * @param buffer 文件缓冲区
+ * @param buffer 文件缓冲区（宽字符）
  * @param size 缓冲区大小
  * @param offset 偏移量
  * @param row 行索引
@@ -111,7 +112,7 @@ bool ExcelRead::parseSheet(const char *buffer, size_t size, size_t offset, const
  * @param value 单元格值
  * @return 是否解析成功
  */
-bool ExcelRead::parseCell(const char *buffer, size_t size, size_t offset, size_t &row, size_t &col, std::string &value)
+bool ExcelRead::parseCell(const wchar_t *buffer, size_t size, size_t offset, size_t &row, size_t &col, wstring &value)
 {
     // 这是一个简化的实现
     // 在实际实现中，我们会在这里解析单元格数据
@@ -124,25 +125,25 @@ bool ExcelRead::parseCell(const char *buffer, size_t size, size_t offset, size_t
  * @param data 数据存储对象
  * @return 是否读取成功
  */
-bool ExcelRead::read(const std::string &filePath, ExcelData &data)
+bool ExcelRead::read(const wstring &filePath, ExcelData &data)
 {
     // 打开文件
-    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
+    wifstream file(filePath.c_str(), ios::binary | ios::ate);
     if (!file)
     {
-        lastError = "无法打开文件: " + filePath;
+        lastError = L"无法打开文件: " + filePath;
         return false;
     }
 
     // 获取文件大小
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
+    streamsize size = file.tellg();
+    file.seekg(0, ios::beg);
 
     // 读取文件到缓冲区
-    std::vector<char> buffer(size);
+    vector<wchar_t> buffer(size);
     if (!file.read(buffer.data(), size))
     {
-        lastError = "无法读取文件: " + filePath;
+        lastError = L"无法读取文件: " + filePath;
         return false;
     }
 
@@ -162,24 +163,24 @@ bool ExcelRead::read(const std::string &filePath, ExcelData &data)
 
     // 为了演示目的，我们添加一些示例数据
     // 在实际实现中，这会被替换为实际解析的数据
-    data.addSheet("Sheet1");
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 0, "姓名");
-    data.addCellToSheetRow("Sheet1", 0, "数学");
-    data.addCellToSheetRow("Sheet1", 0, "语文");
-    data.addCellToSheetRow("Sheet1", 0, "英语");
+    data.addSheet(wstring(L"Sheet1"));
+    data.addRowToSheet(wstring(L"Sheet1"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 0, wstring(L"姓名"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 0, wstring(L"数学"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 0, wstring(L"语文"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 0, wstring(L"英语"));
 
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 1, "张三");
-    data.addCellToSheetRow("Sheet1", 1, "95");
-    data.addCellToSheetRow("Sheet1", 1, "88");
-    data.addCellToSheetRow("Sheet1", 1, "92");
+    data.addRowToSheet(wstring(L"Sheet1"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 1, wstring(L"张三"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 1, wstring(L"95"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 1, wstring(L"88"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 1, wstring(L"92"));
 
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 2, "李四");
-    data.addCellToSheetRow("Sheet1", 2, "87");
-    data.addCellToSheetRow("Sheet1", 2, "91");
-    data.addCellToSheetRow("Sheet1", 2, "85");
+    data.addRowToSheet(wstring(L"Sheet1"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 2, wstring(L"李四"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 2, wstring(L"87"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 2, wstring(L"91"));
+    data.addCellToSheetRow(wstring(L"Sheet1"), 2, wstring(L"85"));
 
     return true;
 }

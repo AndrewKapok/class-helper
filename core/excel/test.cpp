@@ -1,73 +1,74 @@
 #include <iostream>
+#include <string>
 #include "exceldata.h"
 #include "excelread.h"
 #include "excelwrite.h"
-
+using namespace std;
 /**
  * 测试Excel处理功能
  */
 int main()
 {
-    std::cout << "=== Excel处理测试 ===" << std::endl;
+    wcout << L"=== Excel处理测试 ===" << endl;
 
     // 测试1: 创建并填充ExcelData
-    std::cout << "\n测试1: 创建并填充ExcelData..." << std::endl;
+    wcout << L"\n测试1: 创建并填充ExcelData..." << endl;
     ExcelData data;
 
     // 添加工作表
-    data.addSheet("Sheet1");
-    data.addSheet("Sheet2");
+    data.addSheet(L"Sheet1");
+    data.addSheet(L"Sheet2");
 
     // 向Sheet1添加数据
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 0, "姓名");
-    data.addCellToSheetRow("Sheet1", 0, "数学");
-    data.addCellToSheetRow("Sheet1", 0, "语文");
-    data.addCellToSheetRow("Sheet1", 0, "英语");
+    data.addRowToSheet(L"Sheet1");
+    data.addCellToSheetRow(L"Sheet1", 0, L"姓名");
+    data.addCellToSheetRow(L"Sheet1", 0, L"数学");
+    data.addCellToSheetRow(L"Sheet1", 0, L"语文");
+    data.addCellToSheetRow(L"Sheet1", 0, L"英语");
 
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 1, "张三");
-    data.addCellToSheetRow("Sheet1", 1, "95");
-    data.addCellToSheetRow("Sheet1", 1, "88");
-    data.addCellToSheetRow("Sheet1", 1, "92");
+    data.addRowToSheet(L"Sheet1");
+    data.addCellToSheetRow(L"Sheet1", 1, L"张三");
+    data.addCellToSheetRow(L"Sheet1", 1, L"95");
+    data.addCellToSheetRow(L"Sheet1", 1, L"88");
+    data.addCellToSheetRow(L"Sheet1", 1, L"92");
 
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 2, "李四");
-    data.addCellToSheetRow("Sheet1", 2, "87");
-    data.addCellToSheetRow("Sheet1", 2, "91");
-    data.addCellToSheetRow("Sheet1", 2, "85");
+    data.addRowToSheet(L"Sheet1");
+    data.addCellToSheetRow(L"Sheet1", 2, L"李四");
+    data.addCellToSheetRow(L"Sheet1", 2, L"87");
+    data.addCellToSheetRow(L"Sheet1", 2, L"91");
+    data.addCellToSheetRow(L"Sheet1", 2, L"85");
 
-    data.addRowToSheet("Sheet1");
-    data.addCellToSheetRow("Sheet1", 3, "王五");
-    data.addCellToSheetRow("Sheet1", 3, "92");
-    data.addCellToSheetRow("Sheet1", 3, "85");
-    data.addCellToSheetRow("Sheet1", 3, "90");
+    data.addRowToSheet(L"Sheet1");
+    data.addCellToSheetRow(L"Sheet1", 3, L"王五");
+    data.addCellToSheetRow(L"Sheet1", 3, L"92");
+    data.addCellToSheetRow(L"Sheet1", 3, L"85");
+    data.addCellToSheetRow(L"Sheet1", 3, L"90");
 
     // 向Sheet2添加数据
-    data.addRowToSheet("Sheet2");
-    data.addCellToSheetRow("Sheet2", 0, "姓名");
-    data.addCellToSheetRow("Sheet2", 0, "物理");
-    data.addCellToSheetRow("Sheet2", 0, "化学");
-    data.addCellToSheetRow("Sheet2", 0, "生物");
+    data.addRowToSheet(L"Sheet2");
+    data.addCellToSheetRow(L"Sheet2", 0, L"姓名");
+    data.addCellToSheetRow(L"Sheet2", 0, L"物理");
+    data.addCellToSheetRow(L"Sheet2", 0, L"化学");
+    data.addCellToSheetRow(L"Sheet2", 0, L"生物");
 
-    data.addRowToSheet("Sheet2");
-    data.addCellToSheetRow("Sheet2", 1, "张三");
-    data.addCellToSheetRow("Sheet2", 1, "90");
-    data.addCellToSheetRow("Sheet2", 1, "88");
-    data.addCellToSheetRow("Sheet2", 1, "92");
+    data.addRowToSheet(L"Sheet2");
+    data.addCellToSheetRow(L"Sheet2", 1, L"张三");
+    data.addCellToSheetRow(L"Sheet2", 1, L"90");
+    data.addCellToSheetRow(L"Sheet2", 1, L"88");
+    data.addCellToSheetRow(L"Sheet2", 1, L"92");
 
-    data.addRowToSheet("Sheet2");
-    data.addCellToSheetRow("Sheet2", 2, "李四");
-    data.addCellToSheetRow("Sheet2", 2, "85");
-    data.addCellToSheetRow("Sheet2", 2, "90");
-    data.addCellToSheetRow("Sheet2", 2, "88");
+    data.addRowToSheet(L"Sheet2");
+    data.addCellToSheetRow(L"Sheet2", 2, L"李四");
+    data.addCellToSheetRow(L"Sheet2", 2, L"85");
+    data.addCellToSheetRow(L"Sheet2", 2, L"90");
+    data.addCellToSheetRow(L"Sheet2", 2, L"88");
 
     // 测试2: 显示数据
-    std::cout << "\n测试2: 显示ExcelData..." << std::endl;
+    wcout << L"\n测试2: 显示ExcelData..." << endl;
     auto sheetNames = data.getSheetNames();
     for (const auto &sheetName : sheetNames)
     {
-        std::cout << "\n工作表: " << sheetName << std::endl;
+        wcout << L"\n工作表: " << sheetName << endl;
         size_t rowCount = data.getRowCountInSheet(sheetName);
         size_t colCount = data.getMaxColumnCount(sheetName);
 
@@ -75,40 +76,40 @@ int main()
         {
             for (size_t col = 0; col < colCount; col++)
             {
-                const std::string &value = data.getCellValue(sheetName, row, col);
-                std::cout << value << "\t";
+                const wstring &value = data.getCellValue(sheetName, row, col);
+                wcout << value << L"\t";
             }
-            std::cout << std::endl;
+            wcout << endl;
         }
     }
 
     // 测试3: 写入数据到Excel文件
-    std::cout << "\n测试3: 写入数据到Excel文件..." << std::endl;
+    wcout << L"\n测试3: 写入数据到Excel文件..." << endl;
     ExcelWrite writer;
-    std::string outputFile = "test_output.xls";
+    wstring outputFile = L"test_output.xls";
     if (writer.write(outputFile, data))
     {
-        std::cout << "成功写入文件: " << outputFile << std::endl;
+        wcout << L"成功写入文件: " << outputFile << endl;
     }
     else
     {
-        std::cout << "写入文件失败: " << writer.getLastError() << std::endl;
+        wcout << L"写入文件失败: " << writer.getLastError() << endl;
     }
 
     // 测试4: 从Excel文件读取数据
-    std::cout << "\n测试4: 从Excel文件读取数据..." << std::endl;
+    wcout << L"\n测试4: 从Excel文件读取数据..." << endl;
     ExcelData readData;
     ExcelRead reader;
     if (reader.read(outputFile, readData))
     {
-        std::cout << "成功从文件读取: " << outputFile << std::endl;
+        wcout << L"成功从文件读取: " << outputFile << endl;
 
         // 显示读取的数据
-        std::cout << "\n显示读取的数据..." << std::endl;
+        wcout << L"\n显示读取的数据..." << endl;
         auto readSheetNames = readData.getSheetNames();
         for (const auto &sheetName : readSheetNames)
         {
-            std::cout << "\n工作表: " << sheetName << std::endl;
+            wcout << L"\n工作表: " << sheetName << endl;
             size_t rowCount = readData.getRowCountInSheet(sheetName);
             size_t colCount = readData.getMaxColumnCount(sheetName);
 
@@ -116,32 +117,32 @@ int main()
             {
                 for (size_t col = 0; col < colCount; col++)
                 {
-                    const std::string &value = readData.getCellValue(sheetName, row, col);
-                    std::cout << value << "\t";
+                    const wstring &value = readData.getCellValue(sheetName, row, col);
+                    wcout << value << L"\t";
                 }
-                std::cout << std::endl;
+                wcout << endl;
             }
         }
     }
     else
     {
-        std::cout << "从文件读取失败: " << reader.getLastError() << std::endl;
+        wcout << L"从文件读取失败: " << reader.getLastError() << endl;
     }
 
     // 测试5: 测试现有Excel文件
-    std::cout << "\n测试5: 测试现有Excel文件..." << std::endl;
-    std::string existingFile = "../工作簿1.xlsx";
+    wcout << L"\n测试5: 测试现有Excel文件..." << endl;
+    wstring existingFile = L"../工作簿1.xlsx";
     ExcelData existingData;
     if (reader.read(existingFile, existingData))
     {
-        std::cout << "成功从现有文件读取: " << existingFile << std::endl;
+        wcout << L"成功从现有文件读取: " << existingFile << endl;
 
         // 显示读取的数据
-        std::cout << "\n显示现有文件数据..." << std::endl;
+        wcout << L"\n显示现有文件数据..." << endl;
         auto existingSheetNames = existingData.getSheetNames();
         for (const auto &sheetName : existingSheetNames)
         {
-            std::cout << "\n工作表: " << sheetName << std::endl;
+            wcout << L"\n工作表: " << sheetName << endl;
             size_t rowCount = existingData.getRowCountInSheet(sheetName);
             size_t colCount = existingData.getMaxColumnCount(sheetName);
 
@@ -149,18 +150,18 @@ int main()
             {
                 for (size_t col = 0; col < colCount; col++)
                 {
-                    const std::string &value = existingData.getCellValue(sheetName, row, col);
-                    std::cout << value << "\t";
+                    const wstring &value = existingData.getCellValue(sheetName, row, col);
+                    wcout << value << L"\t";
                 }
-                std::cout << std::endl;
+                wcout << endl;
             }
         }
     }
     else
     {
-        std::cout << "从现有文件读取失败: " << reader.getLastError() << std::endl;
+        wcout << L"从现有文件读取失败: " << reader.getLastError() << endl;
     }
 
-    std::cout << "\n=== 测试完成 ===" << std::endl;
+    wcout << L"\n=== 测试完成 ===" << endl;
     return 0;
 }

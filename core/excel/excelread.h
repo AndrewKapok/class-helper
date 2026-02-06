@@ -3,6 +3,7 @@
 
 #include <string>
 #include "exceldata.h"
+using namespace std;
 
 /**
  * Excel文件读取类
@@ -14,35 +15,35 @@ private:
     // 解析辅助函数
     /**
      * 解析文件头
-     * @param buffer 文件缓冲区
+     * @param buffer 文件缓冲区（宽字符）
      * @param size 缓冲区大小
      * @return 是否解析成功
      */
-    bool parseFileHeader(const char *buffer, size_t size);
+    bool parseFileHeader(const wchar_t *buffer, size_t size);
 
     /**
      * 解析记录
-     * @param buffer 文件缓冲区
+     * @param buffer 文件缓冲区（宽字符）
      * @param size 缓冲区大小
      * @param data 数据存储对象
      * @return 是否解析成功
      */
-    bool parseRecords(const char *buffer, size_t size, ExcelData &data);
+    bool parseRecords(const wchar_t *buffer, size_t size, ExcelData &data);
 
     /**
      * 解析工作表
-     * @param buffer 文件缓冲区
+     * @param buffer 文件缓冲区（宽字符）
      * @param size 缓冲区大小
      * @param offset 偏移量
      * @param sheetName 工作表名称
      * @param data 数据存储对象
      * @return 是否解析成功
      */
-    bool parseSheet(const char *buffer, size_t size, size_t offset, const std::string &sheetName, ExcelData &data);
+    bool parseSheet(const wchar_t *buffer, size_t size, size_t offset, const wstring &sheetName, ExcelData &data);
 
     /**
      * 解析单元格
-     * @param buffer 文件缓冲区
+     * @param buffer 文件缓冲区（宽字符）
      * @param size 缓冲区大小
      * @param offset 偏移量
      * @param row 行索引
@@ -50,7 +51,7 @@ private:
      * @param value 单元格值
      * @return 是否解析成功
      */
-    bool parseCell(const char *buffer, size_t size, size_t offset, size_t &row, size_t &col, std::string &value);
+    bool parseCell(const wchar_t *buffer, size_t size, size_t offset, size_t &row, size_t &col, wstring &value);
 
 public:
     /**
@@ -65,23 +66,23 @@ public:
 
     /**
      * 读取Excel文件并填充ExcelData对象
-     * @param filePath 文件路径
+     * @param filePath 文件路径（宽字符）
      * @param data 数据存储对象
      * @return 是否读取成功
      */
-    bool read(const std::string &filePath, ExcelData &data);
+    bool read(const wstring &filePath, ExcelData &data);
 
     /**
      * 错误处理
-     * @return 最后一次错误信息
+     * @return 最后一次错误信息（宽字符）
      */
-    std::string getLastError() const
+    wstring getLastError() const
     {
         return lastError;
     }
 
 private:
-    std::string lastError; ///< 错误信息
+    wstring lastError; ///< 错误信息（宽字符）
 };
 
 #endif // EXCELREAD_H
